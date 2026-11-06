@@ -27,7 +27,9 @@ pub struct Batching {
     /// Timings-file seconds by script (the budget's input).
     pub seconds: HashMap<String, f64>,
     /// `[batch] separate_dirs`: script -> index of its `dirs` entry. A batch
-    /// takes only scripts of its first script's group. Empty: no grouping.
+    /// takes only scripts of its first script's group; scripts with no
+    /// entry (batchable under --mode batch) form one group of their own.
+    /// Empty: no grouping.
     pub groups: HashMap<String, usize>,
 }
 
@@ -40,17 +42,7 @@ pub fn batch_groups(batch: &Batch, scripts: &[String]) -> HashMap<String, usize>
     }
     scripts
         .iter()
-        .filter_map(|path| {
-            batch
-                .dirs
-                .iter()
-                .position(|d| {
-                    let d = d.trim_end_matches('/');
-                    path.strip_prefix(d)
-                        .is_some_and(|rest| rest.starts_with('/'))
-                })
-                .map(|i| (path.clone(), i))
-        })
+        .filter_map(|path| batch.dir_entry(path).map(|i| (path.clone(), i)))
         .collect()
 }
 

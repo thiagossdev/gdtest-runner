@@ -298,20 +298,13 @@ fn batching(
     scripts: &[ScriptInfo],
     timings: &HashMap<String, ScriptTiming>,
 ) -> Batching {
-    let in_dirs = |path: &str| {
-        config.batch.dirs.iter().any(|d| {
-            let d = d.trim_end_matches('/');
-            path.strip_prefix(d)
-                .is_some_and(|rest| rest.starts_with('/'))
-        })
-    };
     let batchable = scripts
         .iter()
         .map(|s| s.path.clone())
         .filter(|p| match mode {
             Mode::Script => false,
             Mode::Batch => true,
-            Mode::Auto => in_dirs(p),
+            Mode::Auto => config.batch.dir_entry(p).is_some(),
         })
         .collect();
     let paths: Vec<String> = scripts.iter().map(|s| s.path.clone()).collect();

@@ -65,6 +65,18 @@ pub struct Batch {
     pub separate_dirs: bool,
 }
 
+impl Batch {
+    /// Index of the first `dirs` entry that `path` (project-relative) is
+    /// under, at any depth. None: under no entry.
+    pub fn dir_entry(&self, path: &str) -> Option<usize> {
+        self.dirs.iter().position(|d| {
+            let d = d.trim_end_matches('/');
+            path.strip_prefix(d)
+                .is_some_and(|rest| rest.starts_with('/'))
+        })
+    }
+}
+
 impl Default for Batch {
     fn default() -> Self {
         Batch {
