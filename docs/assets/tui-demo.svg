@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1085" height="874" viewBox="0 0 1085 874" role="img" aria-label="gdtest-runner terminal UI: six worker panes while a 149-script suite runs, then the slowest scripts and the Run Summary">
+<style>
+text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,'DejaVu Sans Mono',monospace;font-size:13px;white-space:pre;fill:#d6deeb}
+.t{fill:#7f8ea3;font-style:italic}.g{fill:#7fd88f}.y{fill:#e6c07b}.c{fill:#7aa2f7}
+</style>
+<rect width="1085" height="874" rx="8" fill="#141821"/>
+<circle cx="18" cy="15" r="5" fill="#ff5f57"/><circle cx="34" cy="15" r="5" fill="#febc2e"/><circle cx="50" cy="15" r="5" fill="#28c840"/>
+<text xml:space="preserve" x="16" y="42" class="t"># while it runs</text>
+<text xml:space="preserve" x="16" y="65" class="c">$ gdtest-runner</text>
+<text xml:space="preserve" x="16" y="82">gdtest-runner 0.1.0: 149 scripts, 1956 tests discovered; 6 workers, one godot4 process per script, timeout 600 s; logs in .gdtest/logs</text>
+<text xml:space="preserve" x="16" y="99">gdtest [##----------------------] 16/149 scripts  <tspan class="g">194 passed</tspan>  0 failed  0 pending/risky  0 problem scripts  ~</text>
+<text xml:space="preserve" x="16" y="116"><tspan class="c">w1</tspan>   3.1s tests/integration/test_enemy_ai.gd &gt; test_a_cornered_enemy_with_no_cooldown_ready_retreats</text>
+<text xml:space="preserve" x="16" y="133"><tspan class="c">w2</tspan>   3.4s tests/integration/test_save_load.gd &gt; test_a_saved_level_with_every_entity_type_loads_back_unchang~</text>
+<text xml:space="preserve" x="16" y="150"><tspan class="c">w3</tspan>   2.4s tests/integration/test_net_sync.gd &gt; test_two_clients_agree_after_a_rollback</text>
+<text xml:space="preserve" x="16" y="167"><tspan class="c">w4</tspan>   2.8s tests/integration/test_inventory_ui.gd &gt; test_dropping_an_item_on_a_full_slot_swaps_them</text>
+<text xml:space="preserve" x="16" y="184"><tspan class="c">w5</tspan>   2.7s tests/integration/test_pathfinding.gd &gt; test_a_unit_routes_around_a_door_that_closes_mid_path</text>
+<text xml:space="preserve" x="16" y="201"><tspan class="c">w6</tspan>   1.0s tests/integration/test_level_streaming.gd</text>
+<text xml:space="preserve" x="16" y="235" class="t"># at the end</text>
+<text xml:space="preserve" x="16" y="258">gdtest [########################] 149/149 scripts  <tspan class="g">1956 passed</tspan>  0 failed  0 pending/risky  0 problem scripts~</text>
+<text xml:space="preserve" x="16" y="275"><tspan class="c">w1</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="292"><tspan class="c">w2</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="309"><tspan class="c">w3</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="326"><tspan class="c">w4</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="343"><tspan class="c">w5</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="360"><tspan class="c">w6</tspan>  idle</text>
+<text xml:space="preserve" x="16" y="377"></text>
+<text xml:space="preserve" x="16" y="394">Slowest scripts (process wall time)</text>
+<text xml:space="preserve" x="16" y="411">    24.36 s     5 tests  tests/integration/test_full_level_replay.gd</text>
+<text xml:space="preserve" x="16" y="428">    24.30 s     3 tests  tests/integration/test_server_replay.gd</text>
+<text xml:space="preserve" x="16" y="445">    24.27 s     1 tests  tests/integration/test_crowd_replay.gd</text>
+<text xml:space="preserve" x="16" y="462">    15.52 s     1 tests  tests/integration/test_ai_golden_trace.gd</text>
+<text xml:space="preserve" x="16" y="479">    15.16 s     4 tests  tests/integration/test_campaign_replay.gd</text>
+<text xml:space="preserve" x="16" y="496">    10.87 s     2 tests  tests/integration/test_objectives_replay.gd</text>
+<text xml:space="preserve" x="16" y="513">    10.18 s     2 tests  tests/integration/test_wave_replay.gd</text>
+<text xml:space="preserve" x="16" y="530">     8.50 s    11 tests  tests/integration/test_wave_spawner.gd</text>
+<text xml:space="preserve" x="16" y="547">     8.31 s     1 tests  tests/unit/test_suite_integrity.gd</text>
+<text xml:space="preserve" x="16" y="564">     8.25 s     1 tests  tests/integration/test_destruction_replay.gd</text>
+<text xml:space="preserve" x="16" y="581"></text>
+<text xml:space="preserve" x="16" y="598">gdtest-runner: ran 149 of 149 scripts (1956 tests discovered) on 6 workers in 79.4 s wall (471.5 s of process time)</text>
+<text xml:space="preserve" x="16" y="615"></text>
+<text xml:space="preserve" x="16" y="632" class="y">==============================================</text>
+<text xml:space="preserve" x="16" y="649" class="y">= Run Summary</text>
+<text xml:space="preserve" x="16" y="666" class="y">==============================================</text>
+<text xml:space="preserve" x="16" y="683"></text>
+<text xml:space="preserve" x="16" y="700">Totals</text>
+<text xml:space="preserve" x="16" y="717">------</text>
+<text xml:space="preserve" x="16" y="734">Scripts             149</text>
+<text xml:space="preserve" x="16" y="751">Tests              1956</text>
+<text xml:space="preserve" x="16" y="768">Passing Tests      1956</text>
+<text xml:space="preserve" x="16" y="785">Asserts           12648</text>
+<text xml:space="preserve" x="16" y="802">Time              79.4s</text>
+<text xml:space="preserve" x="16" y="819"></text>
+<text xml:space="preserve" x="16" y="836" class="g">---- All tests passed! ----</text>
+</svg>

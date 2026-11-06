@@ -1,0 +1,26 @@
+[package]
+name = "gdtest-runner"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+description = "A vitest-like parallel runner for Godot 4 + GUT test suites: a dynamic queue, fresh headless Godot workers, a live TUI and a verdict per script"
+license = "MIT OR Apache-2.0"
+authors = ["Thiago S. Santos"]
+repository = "https://github.com/thiagossdev/gdtest-runner"
+homepage = "https://github.com/thiagossdev/gdtest-runner"
+readme = "README.md"
+keywords = ["godot", "gut", "gdscript", "test-runner", "parallel"]
+categories = ["development-tools::testing", "command-line-utilities"]
+exclude = ["/docs/assets/", "/CLAUDE.md", "/.github/"]
+# Installed with `cargo install --git`; not on crates.io (yet).
+publish = false
+
+[[bin]]
+name = "gdtest-runner"
+path = "src/main.rs"
+
+[dependencies]
+libc = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "1.1"

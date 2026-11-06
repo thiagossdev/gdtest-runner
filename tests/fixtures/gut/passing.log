@@ -1,0 +1,45 @@
+Godot Engine v4.8.beta2.official.cafc17a19 - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/tmp/tmp.arPwMzPxHk/godot/app_userdata/MY--PROJECT] for temporary output.
+Godot version:  4.8.0
+GUT version:  9.7.1
+[4m
+
+res://tests/unit/test_user_data_isolation.gd
+[0m@@gdtest {"event":"script_start","inner":"","script":"res://tests/unit/test_user_data_isolation.gd","tests":4}
+* test_the_log_file_writes_under_the_throwaway_root
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/unit/test_user_data_isolation.gd","test":"test_the_log_file_writes_under_the_throwaway_root"}
+@@gdtest {"asserts":1,"event":"test_end","inner":"","messages":[],"script":"res://tests/unit/test_user_data_isolation.gd","seconds":0.000158,"status":"passed","test":"test_the_log_file_writes_under_the_throwaway_root"}
+* test_the_recorder_writes_under_the_throwaway_root
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/unit/test_user_data_isolation.gd","test":"test_the_recorder_writes_under_the_throwaway_root"}
+@@gdtest {"asserts":1,"event":"test_end","inner":"","messages":[],"script":"res://tests/unit/test_user_data_isolation.gd","seconds":0.0001,"status":"passed","test":"test_the_recorder_writes_under_the_throwaway_root"}
+* test_settings_save_under_the_throwaway_root
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/unit/test_user_data_isolation.gd","test":"test_settings_save_under_the_throwaway_root"}
+@@gdtest {"asserts":1,"event":"test_end","inner":"","messages":[],"script":"res://tests/unit/test_user_data_isolation.gd","seconds":0.000094,"status":"passed","test":"test_settings_save_under_the_throwaway_root"}
+* test_nothing_is_loaded_from_the_real_save
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/unit/test_user_data_isolation.gd","test":"test_nothing_is_loaded_from_the_real_save"}
+@@gdtest {"asserts":2,"event":"test_end","inner":"","messages":[],"script":"res://tests/unit/test_user_data_isolation.gd","seconds":0.000094,"status":"passed","test":"test_nothing_is_loaded_from_the_real_save"}
+[1m4/4 passed.
+[0m@@gdtest {"asserts_failed":0,"asserts_passed":5,"event":"script_end","failing":0,"inner":"","passing":4,"pending":0,"risky":0,"script":"res://tests/unit/test_user_data_isolation.gd","seconds":0.000974,"setup_failures":[],"tests":4}
+
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Scripts               1
+Tests                 4
+Passing Tests         4
+Asserts               5
+Time              0.005s
+
+
+[32m---- All tests passed! ----
+[0mGUT 0.0.0:  https://github.com/bitwes/Gut/releases/tag/v0.0.0 is now available!
+
+@@gdtest {"event":"run_end"}

@@ -1,0 +1,52 @@
+Godot Engine v4.8.beta2.official.cafc17a19 - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/tmp/tmp.AkfkJS65V6/godot/app_userdata/MY--PROJECT] for temporary output.
+Godot version:  4.8.0
+GUT version:  9.7.1
+[4m
+
+res://tests/fixture/test_fixture_setup.gd
+[0m@@gdtest {"event":"script_start","inner":"","script":"res://tests/fixture/test_fixture_setup.gd","tests":1}
+* test_ok
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/fixture/test_fixture_setup.gd","test":"test_ok"}
+@@gdtest {"asserts":1,"event":"test_end","inner":"","messages":[],"script":"res://tests/fixture/test_fixture_setup.gd","seconds":0.000105,"status":"passed","test":"test_ok"}
+* after_all
+[31m    [Failed]:  [0m["a"] expected to equal ["b"]:  after_all broke
+      at line 5
+[1m1/1 passed.
+[0m@@gdtest {"asserts_failed":1,"asserts_passed":1,"event":"script_end","failing":0,"inner":"","passing":1,"pending":0,"risky":0,"script":"res://tests/fixture/test_fixture_setup.gd","seconds":0.001006,"setup_failures":["[\"a\"] expected to equal [\"b\"]:  after_all broke\n      at line 5"],"tests":1}
+[4m
+
+res://tests/fixture/test_fixture_setup.gd.TestSkipped
+[0m@@gdtest {"event":"script_start","inner":"TestSkipped","script":"res://tests/fixture/test_fixture_setup.gd","tests":1}
+[33m    - [Script skipped]:  skipped on purpose
+[0m
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m[4m
+res://tests/fixture/test_fixture_setup.gd
+[0m[31m[Failed]:  [0mbefore_all/after_all assert failed
+[4m
+res://tests/fixture/test_fixture_setup.gd.TestSkipped
+[0m[33m    [Risky] Script was skipped:  skipped on purpose
+[0m
+Totals
+------
+Scripts               1
+Tests                 1
+Passing Tests         1
+Risky/Pending         1
+Asserts             1/2
+Time              0.005s
+
+
+[31m---- 1 assert(s) in before_all/after_all methods failed ----
+[0mGUT 0.0.0:  https://github.com/bitwes/Gut/releases/tag/v0.0.0 is now available!
+
+@@gdtest {"event":"script_skipped","inner":"TestSkipped","reason":"skipped on purpose","script":"res://tests/fixture/test_fixture_setup.gd"}
+@@gdtest {"event":"run_end"}

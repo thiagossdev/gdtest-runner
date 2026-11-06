@@ -1,0 +1,12 @@
+# The CI integration job's failing case: one test fails on purpose, so the
+# runner must report FAIL and exit 1.
+godot = "godot"
+godot_args = ["--headless"]
+reporter = "res://tools/gdtest/gdtest_reporter.gd"
+test_dirs = ["tests/failing"]
+workers = 1
+script_timeout = 120
+log_dir = ".gdtest/logs-failing"
+
+[isolation]
+data_dir_var = "XDG_DATA_HOME"
