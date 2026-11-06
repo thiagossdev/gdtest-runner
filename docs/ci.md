@@ -36,9 +36,9 @@ Then `scripts/ci_godot_integration.sh` works on a temp copy of
    so it is the one check that GUT and the runner cannot both get wrong
    together. GUT also reports 5 scripts, counting the inner class as one;
 2. the runner in `--mode script` and in `--mode batch` exits 0, prints
-   `ran N of N scripts` (4 script files) and `All tests passed!`, has the same Scripts,
-   Tests, Passing Tests and Asserts totals as the serial GUT run, and
-   writes a timings row per script;
+   `ran N of N scripts` (4 script files) and `All tests passed!`, has
+   the same Scripts, Tests, Passing Tests and Asserts totals as the
+   serial GUT run, and writes a timings row per script;
 3. the runner on `tests/failing/` reports a `FAIL`, `1 failing tests`, and
    exits 1.
 
