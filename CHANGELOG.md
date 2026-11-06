@@ -14,7 +14,8 @@ change, and how versions move before 1.0, is in
 
 - `[batch] separate_dirs` (default `false`): a batch takes scripts of one
   `dirs` entry only, so scripts of two folders never share a Godot
-  process.
+  process. With `--mode batch`, the scripts under no entry form one more
+  group.
 
 ## 0.1.0 - 2026-11-06
 

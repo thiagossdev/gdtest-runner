@@ -32,6 +32,20 @@ fn with_groups_a_batch_takes_only_scripts_of_its_first_scripts_group() {
 }
 
 #[test]
+fn with_groups_scripts_under_no_entry_batch_only_with_each_other() {
+    // --mode batch: o1 and o2 are under no dirs entry, so they have no group.
+    let mut q = queue(&["o1", "u1", "o2", "u2"]);
+    let mut b = batching(&["o1", "u1", "o2", "u2"], 10, 0.0);
+    b.groups = [("u1", 0), ("u2", 0)]
+        .into_iter()
+        .map(|(k, v)| (k.to_string(), v))
+        .collect();
+    assert_eq!(take_batch(&mut q, &b), vec!["o1", "o2"]);
+    assert_eq!(take_batch(&mut q, &b), vec!["u1", "u2"]);
+    assert!(q.is_empty());
+}
+
+#[test]
 fn separate_dirs_parses_defaults_to_false_and_groups_by_dirs_entry() {
     let c = config_with("").unwrap();
     assert!(!c.batch.separate_dirs);
