@@ -32,7 +32,9 @@ A vitest-like parallel runner for Godot 4 + GUT test suites, in Rust. Read
 - `scripts/ci_godot_integration.sh`: the real-Godot check CI runs on
   `tests/fixtures/gutproject/`.
 - `.github/workflows/`: `ci.yml` (fmt, clippy, test on Linux and macOS,
-  msrv, integration) and `deny.yml` (cargo-deny with `deny.toml`).
+  msrv, integration), `deny.yml` (cargo-deny with `deny.toml`) and
+  `release.yml` (on a `vX.Y.Z` tag: check, build, GitHub release;
+  `scripts/release_notes.sh` checks the tag and prints its notes).
   `.github/dependabot.yml`: weekly crate and action updates.
 - `examples/`: a generic config and setup steps.
 
@@ -92,7 +94,8 @@ with `--locked` on the MSRV, on macOS, and against a real Godot; see
   changelog against `Cargo.toml`.
 - **CI pins.** Actions are pinned to a commit SHA with the version in a
   comment; downloads have a fixed version and checksum. Workflows keep
-  `permissions: contents: read`. No release or publish workflow.
+  `permissions: contents: read`; only `release.yml`'s publish job has
+  `contents: write`. Nothing publishes to crates.io.
 
 ## Verifying against a real Godot project
 

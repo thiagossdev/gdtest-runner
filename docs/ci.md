@@ -1,8 +1,9 @@
 # Continuous integration
 
 Two GitHub Actions workflows run on every push to `main` and every pull
-request against it. Every action is pinned to a commit SHA, with its
-version in a comment, and both workflows have only `contents: read`.
+request against it; a third, `release.yml`, runs on version tags. Every
+action is pinned to a commit SHA, with its version in a comment, and every
+job has only `contents: read`, except the job that publishes a release.
 
 ## `ci.yml`
 
@@ -78,17 +79,35 @@ hold the update.
 actionlint      # checks .github/workflows/*.yml (and shellcheck, if installed, on run: blocks)
 ```
 
-## Releases: a proposal, not set up
+## `release.yml`
 
-There is no release or publish workflow; releases are the owner's call.
-If one is wanted later, a small shape would be:
+Runs when a tag `vX.Y.Z` is pushed, or by hand (`workflow_dispatch`) with
+the name of a tag that already exists (the tag's own commit may predate
+the workflow: the checks use the workflow's copy of
+`scripts/release_notes.sh` on the tag's `Cargo.toml` and `CHANGELOG.md`).
+Three jobs:
 
-1. Update `CHANGELOG.md` (move `Unreleased` under the new version) and
-   `version` in `Cargo.toml`, in one commit.
-2. Tag it `vX.Y.Z` by hand.
-3. A workflow on `push: tags: ['v*']` builds release binaries for
-   `x86_64-unknown-linux-gnu`, `aarch64-apple-darwin` and
-   `x86_64-apple-darwin`, and attaches them to a GitHub release with
-   `contents: write` scoped to that job only.
-4. crates.io stays off (`publish = false`) until the owner decides
-   otherwise.
+1. **check the tag**: the tag is `vX.Y.Z` (a pre-release suffix is
+   allowed) and its commit is on `main`; `scripts/release_notes.sh` checks
+   that it is `v` + `Cargo.toml`'s version and that `CHANGELOG.md` has a
+   dated, non-empty section for it; then `cargo test --locked`.
+2. **build**, from scratch (no cache), for `x86_64-unknown-linux-musl`
+   (a static binary for any x86_64 Linux), `aarch64-apple-darwin` and
+   `x86_64-apple-darwin`. Each archive,
+   `gdtest-runner-vX.Y.Z-<target>.tar.gz`, holds the binary, the
+   reporter, `README.md`, `CHANGELOG.md` and both licences, with a
+   `.sha256` beside it.
+3. **publish the GitHub release**: the only job with `contents: write`.
+   `gh release create` with the changelog section as notes, the archives
+   and a `SHA256SUMS`. A tag with a `-` suffix makes a pre-release. If
+   the release already exists, the job fails instead of overwriting it.
+
+Nothing is published to crates.io (`publish = false`).
+
+Check a tag's notes locally before pushing it:
+
+```sh
+scripts/release_notes.sh v0.1.0
+```
+
+The steps for making a release are in [versioning.md](versioning.md).

@@ -51,6 +51,10 @@ reach it:
 
 ## Install
 
+Download a binary for Linux (x86_64, static) or macOS (Apple Silicon or
+Intel) from the [releases](https://github.com/thiagossdev/gdtest-runner/releases);
+each archive also holds the reporter. Or build it with Cargo:
+
 ```sh
 cargo install --locked --git https://github.com/thiagossdev/gdtest-runner
 ```

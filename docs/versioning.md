@@ -81,13 +81,18 @@ change before it lands.
 
 ## Making a release
 
-Releases are made by hand by the owner; there is no release workflow.
+The owner decides when to release; pushing the tag is that decision.
 
 1. Pick the version from the `Unreleased` lines, as above.
 2. In one commit: set `version` in `Cargo.toml` (and `cargo update -p
    gdtest-runner` for the lock file), move the `Unreleased` lines under
    `## X.Y.Z - YYYY-MM-DD`, and leave an empty `## Unreleased` above it.
-3. Run the checks (`cargo test` covers the version rules) and let CI pass.
-4. Tag that commit `vX.Y.Z` and push the tag.
+3. Run the checks (`cargo test` covers the version rules,
+   `scripts/release_notes.sh vX.Y.Z` prints the notes) and let CI pass
+   on `main`.
+4. Tag that commit and push the tag:
+   `git tag -a vX.Y.Z -m "gdtest-runner X.Y.Z" && git push origin vX.Y.Z`.
+   The `Release` workflow checks it again, builds the binaries and
+   publishes the GitHub release ([ci.md](ci.md#releaseyml)).
 
 A tag is never moved or reused. A broken release gets a new patch version.
