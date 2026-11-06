@@ -10,7 +10,7 @@ use std::time::{Duration, Instant};
 use gdtest_runner::config::Config;
 use gdtest_runner::discover::{Naming, ScriptInfo, discover_dirs, discover_files};
 use gdtest_runner::events::Event;
-use gdtest_runner::run::{Batching, ScriptResult, run_all};
+use gdtest_runner::run::{Batching, ScriptResult, batch_groups, run_all};
 use gdtest_runner::summary::{RunReport, display_path};
 use gdtest_runner::timings::{
     ScriptTiming, TestTiming, queue_order, read_timings, write_script_timings, write_test_timings,
@@ -314,8 +314,10 @@ fn batching(
             Mode::Auto => in_dirs(p),
         })
         .collect();
+    let paths: Vec<String> = scripts.iter().map(|s| s.path.clone()).collect();
     Batching {
         batchable,
+        groups: batch_groups(&config.batch, &paths),
         max_scripts: config.batch.max_scripts,
         max_seconds: config.batch.max_seconds,
         seconds: timings

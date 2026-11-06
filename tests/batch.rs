@@ -13,7 +13,47 @@ fn batching(batchable: &[&str], max_scripts: usize, max_seconds: f64) -> Batchin
         max_scripts,
         max_seconds,
         seconds: HashMap::new(),
+        groups: HashMap::new(),
     }
+}
+
+#[test]
+fn with_groups_a_batch_takes_only_scripts_of_its_first_scripts_group() {
+    let mut q = queue(&["u1", "i1", "u2", "i2", "u3"]);
+    let mut b = batching(&["u1", "i1", "u2", "i2", "u3"], 10, 0.0);
+    b.groups = [("u1", 0), ("u2", 0), ("u3", 0), ("i1", 1), ("i2", 1)]
+        .into_iter()
+        .map(|(k, v)| (k.to_string(), v))
+        .collect();
+    assert_eq!(take_batch(&mut q, &b), vec!["u1", "u2", "u3"]);
+    assert_eq!(take_batch(&mut q, &b), vec!["i1", "i2"]);
+    assert!(q.is_empty());
+}
+
+#[test]
+fn separate_dirs_parses_defaults_to_false_and_groups_by_dirs_entry() {
+    let c = config_with("").unwrap();
+    assert!(!c.batch.separate_dirs);
+    let c = config_with(
+        "[batch]\ndirs = [\"tests/unit\", \"tests/integration\"]\nseparate_dirs = true\n",
+    )
+    .unwrap();
+    assert!(c.batch.separate_dirs);
+    let groups = gdtest_runner::run::batch_groups(
+        &c.batch,
+        &[
+            "tests/unit/a.gd".to_string(),
+            "tests/integration/b.gd".to_string(),
+            "tests/unit/sub/c.gd".to_string(),
+        ],
+    );
+    assert_eq!(groups.get("tests/unit/a.gd"), Some(&0));
+    assert_eq!(groups.get("tests/unit/sub/c.gd"), Some(&0));
+    assert_eq!(groups.get("tests/integration/b.gd"), Some(&1));
+    let c = config_with("[batch]\ndirs = [\"tests/unit\", \"tests/integration\"]\n").unwrap();
+    assert!(
+        gdtest_runner::run::batch_groups(&c.batch, &["tests/unit/a.gd".to_string()]).is_empty()
+    );
 }
 
 #[test]

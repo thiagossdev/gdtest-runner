@@ -8,6 +8,12 @@ change, and how versions move before 1.0, is in
 
 ## Unreleased
 
+### Added
+
+- `[batch] separate_dirs` (default `false`): a batch takes scripts of one
+  `dirs` entry only, so scripts of two folders never share a Godot
+  process.
+
 ## 0.1.0 - 2026-11-06
 
 The first public version.

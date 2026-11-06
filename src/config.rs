@@ -59,6 +59,10 @@ pub struct Batch {
     /// with no row counts 0; a batch always takes one script). 0: no budget.
     #[serde(default)]
     pub max_seconds: f64,
+    /// A batch takes scripts of one `dirs` entry only (the entry of its
+    /// first script), so scripts of two folders never share a process.
+    #[serde(default)]
+    pub separate_dirs: bool,
 }
 
 impl Default for Batch {
@@ -67,6 +71,7 @@ impl Default for Batch {
             dirs: Vec::new(),
             max_scripts: default_max_scripts(),
             max_seconds: 0.0,
+            separate_dirs: false,
         }
     }
 }
