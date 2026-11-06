@@ -1,4 +1,5 @@
 use std::collections::{HashMap, VecDeque};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use gdtest_runner::config::Config;
 use gdtest_runner::run::{Batching, take_batch};
@@ -96,11 +97,14 @@ fn no_batching_takes_one_script_at_a_time() {
     assert_eq!(take_batch(&mut q, &Batching::none()), vec!["a"]);
 }
 
+/// Writes a config in its own temp dir per call, so tests running in
+/// parallel never read each other's half-written file.
 fn config_with(extra: &str) -> Result<Config, String> {
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
     let dir = std::env::temp_dir().join(format!(
         "gdtest-batch-config-{}-{}",
         std::process::id(),
-        extra.len()
+        NEXT.fetch_add(1, Ordering::Relaxed)
     ));
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join("gdtest.toml");
