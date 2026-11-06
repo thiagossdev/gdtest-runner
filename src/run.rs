@@ -11,6 +11,7 @@ use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::batch::{event_script, judge_batch};
+use crate::config::Batch;
 use crate::discover::ScriptInfo;
 use crate::events::Event;
 use crate::verdict::{ProcessRun, Verdict, judge};
@@ -25,6 +26,24 @@ pub struct Batching {
     pub max_seconds: f64,
     /// Timings-file seconds by script (the budget's input).
     pub seconds: HashMap<String, f64>,
+    /// `[batch] separate_dirs`: script -> index of its `dirs` entry. A batch
+    /// takes only scripts of its first script's group; scripts with no
+    /// entry (batchable under --mode batch) form one group of their own.
+    /// Empty: no grouping.
+    pub groups: HashMap<String, usize>,
+}
+
+/// The `groups` of `Batching` for `[batch] separate_dirs`: each script under
+/// a `dirs` entry mapped to that entry's index (the first that matches).
+/// Empty when `separate_dirs` is off.
+pub fn batch_groups(batch: &Batch, scripts: &[String]) -> HashMap<String, usize> {
+    if !batch.separate_dirs {
+        return HashMap::new();
+    }
+    scripts
+        .iter()
+        .filter_map(|path| batch.dir_entry(path).map(|i| (path.clone(), i)))
+        .collect()
 }
 
 impl Batching {
@@ -48,12 +67,13 @@ pub fn take_batch(queue: &mut VecDeque<String>, b: &Batching) -> Vec<String> {
         return vec![first];
     }
     let cost = |s: &str| b.seconds.get(s).copied().unwrap_or(0.0);
+    let group = b.groups.get(&first).copied();
     let mut total = cost(&first);
     let mut batch = vec![first];
     let mut i = 0;
     while i < queue.len() && batch.len() < b.max_scripts {
         let next = &queue[i];
-        if !b.batchable.contains(next) {
+        if !b.batchable.contains(next) || b.groups.get(next).copied() != group {
             i += 1;
             continue;
         }

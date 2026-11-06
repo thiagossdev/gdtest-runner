@@ -45,3 +45,5 @@ dirs = ["tests/unit"]
 max_scripts = 20
 # Cap a batch at this many seconds of previous timings (0 = no cap).
 max_seconds = 5.0
+# true: a batch takes scripts of one dirs entry only (default false).
+# separate_dirs = true

@@ -59,6 +59,22 @@ pub struct Batch {
     /// with no row counts 0; a batch always takes one script). 0: no budget.
     #[serde(default)]
     pub max_seconds: f64,
+    /// A batch takes scripts of one `dirs` entry only (the entry of its
+    /// first script), so scripts of two folders never share a process.
+    #[serde(default)]
+    pub separate_dirs: bool,
+}
+
+impl Batch {
+    /// Index of the first `dirs` entry that `path` (project-relative) is
+    /// under, at any depth. None: under no entry.
+    pub fn dir_entry(&self, path: &str) -> Option<usize> {
+        self.dirs.iter().position(|d| {
+            let d = d.trim_end_matches('/');
+            path.strip_prefix(d)
+                .is_some_and(|rest| rest.starts_with('/'))
+        })
+    }
 }
 
 impl Default for Batch {
@@ -67,6 +83,7 @@ impl Default for Batch {
             dirs: Vec::new(),
             max_scripts: default_max_scripts(),
             max_seconds: 0.0,
+            separate_dirs: false,
         }
     }
 }

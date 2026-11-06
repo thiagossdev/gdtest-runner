@@ -179,7 +179,9 @@ of previous timings, so slow scripts do not pile into one process.
 Scripts in a batch share autoloads, static state and the data dir. Batch
 only the scripts you know are safe to run together in any order. Running
 the whole suite batched in a shuffled order once is a good way to find the
-ones that are not.
+ones that are not. With `[batch] separate_dirs = true`, a batch takes
+scripts of one `dirs` entry only, so two folders never share a process
+(with `--mode batch`, the scripts under no entry form one more group).
 
 `--mode auto` (the default) batches the scripts under `[batch] dirs` and
 runs the rest one per process; `--mode script` and `--mode batch` force

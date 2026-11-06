@@ -1,4 +1,5 @@
 use std::collections::{HashMap, VecDeque};
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 use gdtest_runner::config::Config;
 use gdtest_runner::run::{Batching, take_batch};
@@ -13,7 +14,61 @@ fn batching(batchable: &[&str], max_scripts: usize, max_seconds: f64) -> Batchin
         max_scripts,
         max_seconds,
         seconds: HashMap::new(),
+        groups: HashMap::new(),
     }
+}
+
+#[test]
+fn with_groups_a_batch_takes_only_scripts_of_its_first_scripts_group() {
+    let mut q = queue(&["u1", "i1", "u2", "i2", "u3"]);
+    let mut b = batching(&["u1", "i1", "u2", "i2", "u3"], 10, 0.0);
+    b.groups = [("u1", 0), ("u2", 0), ("u3", 0), ("i1", 1), ("i2", 1)]
+        .into_iter()
+        .map(|(k, v)| (k.to_string(), v))
+        .collect();
+    assert_eq!(take_batch(&mut q, &b), vec!["u1", "u2", "u3"]);
+    assert_eq!(take_batch(&mut q, &b), vec!["i1", "i2"]);
+    assert!(q.is_empty());
+}
+
+#[test]
+fn with_groups_scripts_under_no_entry_batch_only_with_each_other() {
+    // --mode batch: o1 and o2 are under no dirs entry, so they have no group.
+    let mut q = queue(&["o1", "u1", "o2", "u2"]);
+    let mut b = batching(&["o1", "u1", "o2", "u2"], 10, 0.0);
+    b.groups = [("u1", 0), ("u2", 0)]
+        .into_iter()
+        .map(|(k, v)| (k.to_string(), v))
+        .collect();
+    assert_eq!(take_batch(&mut q, &b), vec!["o1", "o2"]);
+    assert_eq!(take_batch(&mut q, &b), vec!["u1", "u2"]);
+    assert!(q.is_empty());
+}
+
+#[test]
+fn separate_dirs_parses_defaults_to_false_and_groups_by_dirs_entry() {
+    let c = config_with("").unwrap();
+    assert!(!c.batch.separate_dirs);
+    let c = config_with(
+        "[batch]\ndirs = [\"tests/unit\", \"tests/integration\"]\nseparate_dirs = true\n",
+    )
+    .unwrap();
+    assert!(c.batch.separate_dirs);
+    let groups = gdtest_runner::run::batch_groups(
+        &c.batch,
+        &[
+            "tests/unit/a.gd".to_string(),
+            "tests/integration/b.gd".to_string(),
+            "tests/unit/sub/c.gd".to_string(),
+        ],
+    );
+    assert_eq!(groups.get("tests/unit/a.gd"), Some(&0));
+    assert_eq!(groups.get("tests/unit/sub/c.gd"), Some(&0));
+    assert_eq!(groups.get("tests/integration/b.gd"), Some(&1));
+    let c = config_with("[batch]\ndirs = [\"tests/unit\", \"tests/integration\"]\n").unwrap();
+    assert!(
+        gdtest_runner::run::batch_groups(&c.batch, &["tests/unit/a.gd".to_string()]).is_empty()
+    );
 }
 
 #[test]
@@ -56,11 +111,14 @@ fn no_batching_takes_one_script_at_a_time() {
     assert_eq!(take_batch(&mut q, &Batching::none()), vec!["a"]);
 }
 
+/// Writes a config in its own temp dir per call, so tests running in
+/// parallel never read each other's half-written file.
 fn config_with(extra: &str) -> Result<Config, String> {
+    static NEXT: AtomicUsize = AtomicUsize::new(0);
     let dir = std::env::temp_dir().join(format!(
         "gdtest-batch-config-{}-{}",
         std::process::id(),
-        extra.len()
+        NEXT.fetch_add(1, Ordering::Relaxed)
     ));
     std::fs::create_dir_all(&dir).unwrap();
     let path = dir.join("gdtest.toml");

@@ -64,6 +64,7 @@ port base.
 | `dirs` | list of paths | `[]` | Scripts under these folders may share a process (`--mode auto`). |
 | `max_scripts` | integer, at least 1 | `20` | At most this many scripts per process. |
 | `max_seconds` | number, 0 or more | `0.0` | At most this many seconds of previous timings per process. A script with no timing counts 0. `0` means no budget. A batch always takes at least one script. |
+| `separate_dirs` | boolean | `false` | A batch takes scripts of one `dirs` entry only, the entry of its first script: scripts of two entries never share a process. With `--mode batch`, the scripts under no entry form one more group. For runs where what one script leaves behind in a process matters to the next, for example a coverage run that credits one-time work to the first script that needs it. |
 
 `--mode script` ignores `dirs` and runs every script alone; `--mode batch`
 treats every script as batchable.
