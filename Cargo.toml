@@ -12,8 +12,6 @@ readme = "README.md"
 keywords = ["godot", "gut", "gdscript", "test-runner", "parallel"]
 categories = ["development-tools::testing", "command-line-utilities"]
 exclude = ["/docs/assets/", "/CLAUDE.md", "/.github/"]
-# Installed with `cargo install --git`; not on crates.io (yet).
-publish = false
 
 [[bin]]
 name = "gdtest-runner"

@@ -92,7 +92,8 @@ The owner decides when to release; pushing the tag is that decision.
    on `main`.
 4. Tag that commit and push the tag:
    `git tag -a vX.Y.Z -m "gdtest-runner X.Y.Z" && git push origin vX.Y.Z`.
-   The `Release` workflow checks it again, builds the binaries and
-   publishes the GitHub release ([ci.md](ci.md#releaseyml)).
+   The `Release` workflow checks it again, builds the binaries, publishes
+   the GitHub release and then the crate on crates.io
+   ([ci.md](ci.md#releaseyml)).
 
 A tag is never moved or reused. A broken release gets a new patch version.

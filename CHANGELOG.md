@@ -45,3 +45,6 @@ The first public version.
 - CI on GitHub Actions: fmt, clippy, tests on Linux and macOS, the MSRV,
   and a real headless Godot 4.7.2 + GUT 9.7.1 run per script and batched;
   cargo-deny and Dependabot.
+- Published on crates.io (`cargo install --locked gdtest-runner`), and as
+  binaries for x86_64 Linux (static) and macOS (Apple Silicon and Intel)
+  on each GitHub release.

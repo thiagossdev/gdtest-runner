@@ -3,7 +3,9 @@
 Two GitHub Actions workflows run on every push to `main` and every pull
 request against it; a third, `release.yml`, runs on version tags. Every
 action is pinned to a commit SHA, with its version in a comment, and every
-job has only `contents: read`, except the job that publishes a release.
+job has only `contents: read`, except the two publishing jobs of a
+release: `contents: write` for the GitHub release, `id-token: write` for
+crates.io.
 
 ## `ci.yml`
 
@@ -85,7 +87,7 @@ Runs when a tag `vX.Y.Z` is pushed, or by hand (`workflow_dispatch`) with
 the name of a tag that already exists (the tag's own commit may predate
 the workflow: the checks use the workflow's copy of
 `scripts/release_notes.sh` on the tag's `Cargo.toml` and `CHANGELOG.md`).
-Three jobs:
+Four jobs:
 
 1. **check the tag**: the tag is `vX.Y.Z` (a pre-release suffix is
    allowed) and its commit is on `main`; `scripts/release_notes.sh` checks
@@ -102,7 +104,30 @@ Three jobs:
    and a `SHA256SUMS`. A tag with a `-` suffix makes a pre-release. If
    the release already exists, the job fails instead of overwriting it.
 
-Nothing is published to crates.io (`publish = false`).
+4. **publish to crates.io**, last, because a crates.io version can never
+   be replaced. It runs in the `crates-io` environment with
+   `id-token: write` and authenticates with
+   [Trusted Publishing](https://crates.io/docs/trusted-publishing): no
+   token is stored in the repository. It skips, with a notice, a version
+   whose `Cargo.toml` says `publish = false` or that is already on
+   crates.io, so a re-run after a failure is safe.
+
+### Setting up crates.io (once)
+
+crates.io accepts Trusted Publishing only for a crate that already
+exists, so the first version is published by hand:
+
+1. Log in to crates.io with GitHub, verify the e-mail, and create an API
+   token scoped to `publish-new`. `cargo login`, then `cargo publish` from
+   the commit that will be tagged. Delete the token afterwards.
+2. In the crate's settings on crates.io, add a trusted publisher: GitHub,
+   owner `thiagossdev`, repository `gdtest-runner`, workflow `release.yml`,
+   environment `crates-io`.
+3. Optionally, in the repository's Settings, Environments, `crates-io`,
+   add yourself as a required reviewer, so every crates.io publish waits
+   for an approval.
+4. Push the tag. The crates.io job sees the version is already there and
+   skips; from the next tag on, it publishes.
 
 Check a tag's notes locally before pushing it:
 

@@ -2,9 +2,10 @@ name: Release
 
 # Pushing a tag vX.Y.Z makes a GitHub release: it checks the tag against
 # Cargo.toml and CHANGELOG.md, runs the tests, builds the binaries and
-# publishes them with that version's changelog section as notes. For a tag
-# pushed before this workflow existed, run it by hand with the tag name.
-# Nothing is published to crates.io. See docs/versioning.md.
+# publishes them with that version's changelog section as notes, then
+# publishes the crate to crates.io through Trusted Publishing (no stored
+# token). For a tag pushed before this workflow existed, run it by hand
+# with the tag name. See docs/ci.md and docs/versioning.md.
 on:
   push:
     tags: ["v*"]
@@ -149,3 +150,59 @@ jobs:
             --title "gdtest-runner ${TAG#v}" \
             --notes-file notes.md \
             dist/*.tar.gz dist/SHA256SUMS
+
+  # The last step, because a crates.io version can never be replaced. It
+  # authenticates with Trusted Publishing: crates.io trusts this repository,
+  # this workflow file and the `crates-io` environment (set up once in the
+  # crate's settings on crates.io), and hands out a short-lived token.
+  crates-io:
+    name: publish to crates.io
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: crates-io
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: refs/tags/${{ env.TAG }}
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: stable
+      - name: Is this version for crates.io?
+        id: plan
+        run: |
+          version=${TAG#v}
+          publish=$(cargo metadata --no-deps --locked --format-version 1 |
+            jq -c '.packages[] | select(.name == "gdtest-runner") | .publish')
+          if [[ $publish == "[]" ]]; then
+            echo "::notice::Cargo.toml at $TAG has publish = false: not published to crates.io"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          status=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -A "gdtest-runner release workflow (https://github.com/$GITHUB_REPOSITORY)" \
+            "https://crates.io/api/v1/crates/gdtest-runner/$version")
+          case $status in
+            200)
+              echo "::notice::gdtest-runner $version is already on crates.io: not published again"
+              echo "publish=false" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "publish=true" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::crates.io answered HTTP $status for gdtest-runner $version"
+              exit 1
+              ;;
+          esac
+      - uses: rust-lang/crates-io-auth-action@3268eb413133e2960fa4ae0e963ca76380c54cd9 # v1.0.6
+        if: steps.plan.outputs.publish == 'true'
+        id: auth
+      - if: steps.plan.outputs.publish == 'true'
+        run: cargo publish --locked
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ steps.auth.outputs.token }}

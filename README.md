@@ -2,6 +2,7 @@
 
 [![CI](https://github.com/thiagossdev/gdtest-runner/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/thiagossdev/gdtest-runner/actions/workflows/ci.yml)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#licence)
+[![crates.io](https://img.shields.io/crates/v/gdtest-runner.svg)](https://crates.io/crates/gdtest-runner)
 [![Rust 1.88+](https://img.shields.io/badge/rust-1.88%2B-orange.svg)](Cargo.toml)
 
 A parallel test runner for Godot 4 projects that use
@@ -14,7 +15,7 @@ On a 149-script, 1956-test suite it cut the run from about 112 s (one GUT
 process) to about 37 s on a 6-core machine, with the same per-script counts.
 See [Measured results](#measured-results).
 
-![The terminal UI: six worker panes while the suite runs, then the slowest scripts and the Run Summary](docs/assets/tui-demo.svg)
+![The terminal UI: six worker panes while the suite runs, then the slowest scripts and the Run Summary](https://raw.githubusercontent.com/thiagossdev/gdtest-runner/main/docs/assets/tui-demo.svg)
 
 ## Why
 
@@ -51,9 +52,16 @@ reach it:
 
 ## Install
 
-Download a binary for Linux (x86_64, static) or macOS (Apple Silicon or
-Intel) from the [releases](https://github.com/thiagossdev/gdtest-runner/releases);
-each archive also holds the reporter. Or build it with Cargo:
+From [crates.io](https://crates.io/crates/gdtest-runner):
+
+```sh
+cargo install --locked gdtest-runner
+```
+
+Or download a binary for Linux (x86_64, static) or macOS (Apple Silicon
+or Intel) from the
+[releases](https://github.com/thiagossdev/gdtest-runner/releases); each
+archive also holds the reporter. Or the latest `main`:
 
 ```sh
 cargo install --locked --git https://github.com/thiagossdev/gdtest-runner
