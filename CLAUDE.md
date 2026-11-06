@@ -62,8 +62,10 @@ with `--locked` on the MSRV, on macOS, and against a real Godot; see
 - `tests/fixtures/stubproject/` holds the stub's scripts;
   `tests/fixtures/project/` holds real-looking GDScript for discovery.
 - `tests/fixtures/gutproject/` is a minimal real GUT project for CI's
-  integration job. Its counts are pinned in `tests/cli.rs` and in
-  `scripts/ci_godot_integration.sh`; change all three together.
+  integration job. `tests/cli.rs` pins its script and test counts; the
+  CI script reads them from `--list` and holds only the assert count,
+  which nothing can count statically. Change the fixture, the cli test
+  and `expected_asserts` together.
 - `tests/fixtures/gut/*.log` are captured from real GUT runs with the
   reporter. A parser change needs a captured log, not a hand-written one.
   Replace project-specific names before committing a capture.

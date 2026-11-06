@@ -30,10 +30,13 @@ Then `scripts/ci_godot_integration.sh` works on a temp copy of
 `tests/fixtures/gutproject/`: it adds GUT and the current reporter, runs
 `godot --headless --import`, and checks that
 
-1. GUT alone, serially, reports 9 tests, 9 passing, 13 asserts (and 5
-   scripts: GUT counts the inner class as one);
+1. GUT alone, serially, reports as many tests (all passing) as the
+   runner's `--list` finds, 9 today, and 13 asserts. The assert count is
+   the only number written in the script: asserts exist only at run time,
+   so it is the one check that GUT and the runner cannot both get wrong
+   together. GUT also reports 5 scripts, counting the inner class as one;
 2. the runner in `--mode script` and in `--mode batch` exits 0, prints
-   `ran 4 of 4 scripts` and `All tests passed!`, has the same Scripts,
+   `ran N of N scripts` (4 script files) and `All tests passed!`, has the same Scripts,
    Tests, Passing Tests and Asserts totals as the serial GUT run, and
    writes a timings row per script;
 3. the runner on `tests/failing/` reports a `FAIL`, `1 failing tests`, and

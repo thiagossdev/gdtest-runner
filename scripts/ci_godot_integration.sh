@@ -23,11 +23,11 @@ godot=$(realpath "$2")
 gut_dir=$(realpath "$3")
 repo=$(cd "$(dirname "$0")/.." && pwd)
 
-# What the fixture holds (tests/fixtures/gutproject/tests/unit): 4 script
-# files, 9 tests, 13 asserts, all passing. tests/cli.rs checks the static
-# count of the same files.
-expected_files=4
-expected_tests=9
+# Asserts run only at run time, so no static count can check them: this is
+# the fixture's own count (tests/fixtures/gutproject/tests/unit), the one
+# number here that neither GUT nor the runner produces. Per file:
+# test_arithmetic 3, test_strings 4 (1 + 2 + 1), test_user_dir 5 (2 + 3),
+# test_port_base 1. Change it with the fixture.
 expected_asserts=13
 
 work=$(mktemp -d)
@@ -37,6 +37,18 @@ cp -R "$repo/tests/fixtures/gutproject" "$project"
 mkdir -p "$project/addons" "$project/tools/gdtest"
 cp -R "$gut_dir/addons/gut" "$project/addons/gut"
 cp "$repo/reporter/gdtest_reporter.gd" "$project/tools/gdtest/"
+
+# Script files and tests come from the runner's static discovery (--list
+# starts no Godot). tests/cli.rs pins them for this fixture, and a run whose
+# events disagree with them is a MISMATCH.
+list=$("$runner" --config "$project/gdtest.toml" --list | tail -n 1)
+if [[ ! $list =~ ^([0-9]+)\ scripts,\ ([0-9]+)\ tests$ ]]; then
+	echo "FAILED: no 'N scripts, M tests' line from --list: '$list'" >&2
+	exit 1
+fi
+expected_files=${BASH_REMATCH[1]}
+expected_tests=${BASH_REMATCH[2]}
+echo "== discovery: $expected_files script files, $expected_tests tests"
 
 # The config names the binary "godot"; put it first on PATH.
 mkdir -p "$work/bin"
