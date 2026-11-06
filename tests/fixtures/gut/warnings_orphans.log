@@ -1,0 +1,88 @@
+Godot Engine v4.8.beta2.official.cafc17a19 - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/tmp/tmp.Q2vN8sLd0e/godot/app_userdata/MY--PROJECT] for temporary output.
+Godot version:  4.8.0
+GUT version:  9.7.1
+[4m
+
+res://tests/unit/test_user_data_isolation.gd
+[0m* test_the_log_file_writes_under_the_throwaway_root
+[0m[4m
+
+res://tests/unit/test_scene_tree.gd
+[0m* test_registering_a_node_switches_it_to_manual_processing
+* test_under_the_limit_every_node_advances_every_frame
+* test_over_the_limit_half_advance_on_alternate_frames
+* test_back_under_the_limit_every_node_catches_up
+* test_a_request_advances_its_node_on_an_off_frame
+* test_a_freed_node_is_dropped_without_errors
+* test_a_subtree_registers_and_fires_the_same_frame
+* test_events_match_between_full_rate_and_30_hz
+* test_the_level_registers_every_actor
+[33m    2 Orphans[0m
+[33m        * [<Camera3D#672044948608>]
+        * [<AudioListener3D#672078503049>][0m
+* test_the_level_counts_only_active_actors
+[33m    2 Orphans[0m
+[33m        * [<AudioListener3D#672497933458>]
+        * [<Camera3D#672464379035>][0m
+res://tests/unit/test_effects.gd
+[0m* test_a_combo_cycles_through_distinct_clips
+* test_each_slot_has_its_own_clip
+* test_reactions_alternate
+* test_a_clip_follows_the_motion_direction
+* test_a_trail_records_only_while_emitting
+* test_an_impact_frees_itself
+* test_impacts_of_one_colour_share_resources
+* test_a_pooled_effect_is_recycled
+* test_the_idle_pool_is_capped
+* test_a_shake_decays_back_to_rest
+* test_a_strong_shake_beats_a_weak_one
+* test_a_flash_clears_after_its_time
+* test_nothing_flashes_before_the_first_frame
+* test_the_view_shows_the_current_state_not_a_pending_one
+* test_the_view_puts_its_meshes_on_their_layer
+[33m[GUT WARNING]:  [0mTest script has 3 unfreed children.  Increase log level for more details.
+[1m15/15 passed.
+[1m4/4 passed.
+[0m
+
+
+
+[33m==============================================[0m
+[33m= 8 Orphans[0m
+[33m==============================================[0m
+test_scene_tree.gd
+    - test_the_level_registers_every_actor
+[33m        * [<Camera3D#672044948608>]
+        * [<AudioListener3D#672078503049>][0m
+    - test_the_level_counts_only_active_actors
+[33m        * [<AudioListener3D#672497933458>]
+        * [<Camera3D#672464379035>][0m
+test_lighting.gd
+    - test_the_sun_uses_two_shadow_splits
+[33m        * [<AudioListener3D#1459366142308>]
+        * [<Camera3D#1459332588070>][0m
+    - test_lamps_shadow_the_level_but_not_the_actors
+[33m        * [<AudioListener3D#1459651355162>]
+        * [<Camera3D#1459617800738>][0m
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m
+Totals
+------
+Warnings             17
+
+Scripts             149
+Tests              1956
+Passing Tests      1956
+Asserts           12648
+Orphans               8
+Time              110.48s
+
+
+[32m---- All tests passed! ----

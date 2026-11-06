@@ -1,0 +1,17 @@
+# The CI integration job's config: every script under tests/unit passes.
+# CI forces --mode script and --mode batch; see scripts/ci_godot_integration.sh.
+godot = "godot"
+godot_args = ["--headless"]
+reporter = "res://tools/gdtest/gdtest_reporter.gd"
+test_dirs = ["tests/unit"]
+workers = 2
+script_timeout = 120
+timings = ".gdtest/timings.tsv"
+log_dir = ".gdtest/logs"
+
+[isolation]
+data_dir_var = "XDG_DATA_HOME"
+port_base_var = "GDTEST_PORT_BASE"
+
+[batch]
+dirs = ["tests/unit"]

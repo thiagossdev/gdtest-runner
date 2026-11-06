@@ -1,0 +1,69 @@
+Godot Engine v4.8.beta2.official.cafc17a19 - https://godotengine.org
+
+---  GUT  ---
+[1m[INFO]:  [0musing [/tmp/tmp.5YPZHUk8rO/godot/app_userdata/MY--PROJECT] for temporary output.
+Godot version:  4.8.0
+GUT version:  9.7.1
+[4m
+
+res://tests/fixture/test_fixture.gd
+[0m@@gdtest {"event":"script_start","inner":"","script":"res://tests/fixture/test_fixture.gd","tests":4}
+* test_passes
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/fixture/test_fixture.gd","test":"test_passes"}
+@@gdtest {"asserts":2,"event":"test_end","inner":"","messages":[],"script":"res://tests/fixture/test_fixture.gd","seconds":0.000144,"status":"passed","test":"test_passes"}
+* test_fails
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/fixture/test_fixture.gd","test":"test_fails"}
+[31m    [Failed]:  [0m[1] expected to equal [2]:  one is not two
+      at line 10
+@@gdtest {"asserts":1,"event":"test_end","inner":"","messages":["[1] expected to equal [2]:  one is not two\n      at line 10"],"script":"res://tests/fixture/test_fixture.gd","seconds":0.000167,"status":"failed","test":"test_fails"}
+* test_pending
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/fixture/test_fixture.gd","test":"test_pending"}
+[33m    [Pending]:  [0mnot yet
+@@gdtest {"asserts":0,"event":"test_end","inner":"","messages":["not yet"],"script":"res://tests/fixture/test_fixture.gd","seconds":0.000093,"status":"pending","test":"test_pending"}
+* test_risky
+@@gdtest {"event":"test_start","inner":"","script":"res://tests/fixture/test_fixture.gd","test":"test_risky"}
+[33m    [Risky]:  [0mtest_risky did not assert
+@@gdtest {"asserts":0,"event":"test_end","inner":"","messages":[],"script":"res://tests/fixture/test_fixture.gd","seconds":0.000098,"status":"risky","test":"test_risky"}
+[1m1/4 passed.
+[0m@@gdtest {"asserts_failed":1,"asserts_passed":2,"event":"script_end","failing":1,"inner":"","passing":1,"pending":1,"risky":1,"script":"res://tests/fixture/test_fixture.gd","seconds":0.000907,"setup_failures":[],"tests":4}
+[4m
+
+res://tests/fixture/test_fixture.gd.TestInner
+[0m@@gdtest {"event":"script_start","inner":"TestInner","script":"res://tests/fixture/test_fixture.gd","tests":1}
+* test_inner_passes
+@@gdtest {"event":"test_start","inner":"TestInner","script":"res://tests/fixture/test_fixture.gd","test":"test_inner_passes"}
+@@gdtest {"asserts":1,"event":"test_end","inner":"TestInner","messages":[],"script":"res://tests/fixture/test_fixture.gd","seconds":0.00009,"status":"passed","test":"test_inner_passes"}
+[1m1/1 passed.
+[0m@@gdtest {"asserts_failed":0,"asserts_passed":1,"event":"script_end","failing":0,"inner":"TestInner","passing":1,"pending":0,"risky":0,"script":"res://tests/fixture/test_fixture.gd","seconds":0.000318,"setup_failures":[],"tests":1}
+
+
+
+
+[33m==============================================
+[0m[33m= Run Summary
+[0m[33m==============================================
+[0m[4m
+res://tests/fixture/test_fixture.gd
+[0m- test_fails
+[31m    [Failed]:  [0m[1] expected to equal [2]:  one is not two
+          at line 10
+- test_pending
+[33m    [Pending]:  [0mnot yet
+- test_risky
+[33m    [Risky]:  [0mDid not assert
+
+Totals
+------
+Scripts               2
+Tests                 5
+Passing Tests         2
+Failing Tests         1
+Risky/Pending         2
+Asserts             3/4
+Time              0.006s
+
+
+[31m---- 1 failing tests ----
+[0mGUT 0.0.0:  https://github.com/bitwes/Gut/releases/tag/v0.0.0 is now available!
+
+@@gdtest {"event":"run_end"}

@@ -1,0 +1,21 @@
+project = ".."
+godot = "godot4"
+godot_args = ["--headless", "--fixed-fps", "60"]
+gut_args = ["-glog=1"]
+reporter = "res://tools/gdtest_reporter.gd"
+pre_run_script = "res://tests/pre_run.gd"
+test_dirs = ["tests/unit", "tests/integration"]
+workers = 3
+script_timeout = 120
+timings = ".gdtest/timings.tsv"
+test_timings = ".gdtest/test_timings.tsv"
+log_dir = ".gdtest/gdtest"
+
+[env]
+EXTRA = "yes"
+
+[isolation]
+data_dir_var = "XDG_DATA_HOME"
+port_base_var = "GUT_PORT_BASE"
+port_base = 20000
+port_stride = 10

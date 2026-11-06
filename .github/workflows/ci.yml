@@ -1,0 +1,138 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  fmt:
+    name: fmt
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: stable
+          components: rustfmt
+      - run: cargo fmt --check
+
+  clippy:
+    name: clippy
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: stable
+          components: clippy
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - run: cargo clippy --locked --all-targets -- -D warnings
+
+  # The runner uses Unix process groups and signals (std::os::unix, libc):
+  # Linux and macOS. Windows does not compile it and is not supported.
+  test:
+    name: test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - run: cargo test --locked
+
+  # Builds and tests with the rust-version in Cargo.toml, read from there so
+  # the two never drift apart.
+  msrv:
+    name: msrv
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: msrv
+        run: |
+          version=$(sed -n 's/^rust-version = "\(.*\)"$/\1/p' Cargo.toml)
+          if [[ -z $version ]]; then
+            echo "::error::no rust-version in Cargo.toml"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: ${{ steps.msrv.outputs.version }}
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - run: cargo test --locked
+
+  # A real headless Godot + GUT on tests/fixtures/gutproject, per script and
+  # batched, checked against a serial GUT run. The only downloads are the
+  # pinned Godot and GUT releases below, each checked against its checksum.
+  integration:
+    name: integration (Godot ${{ matrix.godot }}, GUT ${{ matrix.gut }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      matrix:
+        include:
+          - godot: 4.7.2-stable
+            # From SHA512-SUMS.txt of the official 4.7.2-stable release.
+            godot_sha512: 9aa00f7a605200940bce3027a567b782f49bd8e940dd06ae9e987bd65aee1b1467edd56ed84fcdcbdd44354bf613bdbb4e5d2913e925850368e150c59ed54c65
+            gut: 9.7.1
+            # sha256 of the v9.7.1 tag's source archive.
+            gut_sha256: 6da99c4e9228d9bec3fb4bd1730a487770a989f0f511dac82a2897a964613385
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: dtolnay/rust-toolchain@683b588c487a69d01f6c6ddf40f036ff682cc2c8 # v1
+        with:
+          toolchain: stable
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+      - name: Download Godot and GUT
+        env:
+          GODOT: ${{ matrix.godot }}
+          GODOT_SHA512: ${{ matrix.godot_sha512 }}
+          GUT: ${{ matrix.gut }}
+          GUT_SHA256: ${{ matrix.gut_sha256 }}
+        run: |
+          dl="$RUNNER_TEMP/dl"
+          mkdir -p "$dl"
+          cd "$dl"
+          curl -fsSL --retry 3 -o godot.zip \
+            "https://github.com/godotengine/godot/releases/download/${GODOT}/Godot_v${GODOT}_linux.x86_64.zip"
+          echo "${GODOT_SHA512}  godot.zip" | sha512sum -c -
+          unzip -q godot.zip
+          curl -fsSL --retry 3 -o gut.tar.gz \
+            "https://github.com/bitwes/Gut/archive/refs/tags/v${GUT}.tar.gz"
+          echo "${GUT_SHA256}  gut.tar.gz" | sha256sum -c -
+          tar xzf gut.tar.gz
+          echo "GODOT_BIN=$dl/Godot_v${GODOT}_linux.x86_64" >> "$GITHUB_ENV"
+          echo "GUT_DIR=$dl/Gut-${GUT}" >> "$GITHUB_ENV"
+      - run: cargo build --locked
+      - run: scripts/ci_godot_integration.sh target/debug/gdtest-runner "$GODOT_BIN" "$GUT_DIR"

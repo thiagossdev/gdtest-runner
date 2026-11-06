@@ -1,0 +1,9 @@
+; A minimal Godot 4 project for gdtest-runner's CI integration job.
+; CI copies it to a temp dir, adds GUT (addons/gut) and the reporter
+; (tools/gdtest/gdtest_reporter.gd), imports it and runs the suite.
+
+config_version=5
+
+[application]
+
+config/name="gdtest-runner CI"

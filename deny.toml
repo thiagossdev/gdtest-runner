@@ -1,0 +1,32 @@
+# cargo-deny config: https://embarkstudios.github.io/cargo-deny/
+# Run locally with `cargo deny check`.
+
+[graph]
+all-features = true
+
+[advisories]
+version = 2
+# Every advisory (vulnerability, unmaintained, unsound) fails the check;
+# an accepted one goes in `ignore` with its id and a reason.
+yanked = "deny"
+ignore = []
+
+[licenses]
+version = 2
+# Licences a dependency may use and still ship under MIT OR Apache-2.0.
+allow = ["MIT", "Apache-2.0", "Unicode-3.0"]
+confidence-threshold = 0.9
+
+[licenses.private]
+# gdtest-runner itself is `publish = false`; its own licence is in Cargo.toml.
+ignore = true
+
+[bans]
+# Two versions of one crate (winnow, via toml) are noted, not an error.
+multiple-versions = "warn"
+wildcards = "deny"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-registry = ["https://github.com/rust-lang/crates.io-index"]

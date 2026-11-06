@@ -1,0 +1,47 @@
+# gdtest-runner config for a Godot 4 + GUT project.
+# Put it next to project.godot (or anywhere, and set `project`).
+# Paths: `project` is relative to this file; every other path is relative
+# to the project. Unknown keys are an error. See docs/configuration.md.
+
+project = "."
+godot = "godot"                     # a name on PATH or a path to the binary
+# --fixed-fps makes each frame exactly 1/60 s of game time, as fast as the
+# CPU allows: physics tests run the same at any speed. Drop it if your
+# tests need real time.
+godot_args = ["--headless", "--fixed-fps", "60"]
+gut_cmdln = "addons/gut/gut_cmdln.gd"
+gut_args = ["-glog=1"]
+
+# Where you copied reporter/gdtest_reporter.gd (required).
+reporter = "res://tools/gdtest/gdtest_reporter.gd"
+# Your own GUT pre-run hook, if you have one; the reporter chains it.
+# pre_run_script = "res://tests/pre_run.gd"
+
+test_dirs = ["tests/unit", "tests/integration"]
+workers = 6
+script_timeout = 600
+
+timings = ".gdtest/timings.tsv"
+test_timings = ".gdtest/test_timings.tsv"
+log_dir = ".gdtest/logs"
+
+[env]
+# Extra environment for every Godot process.
+# MY_GAME_TEST_MODE = "1"
+
+[isolation]
+# Each process gets its own empty dir here: on Linux, Godot's user://.
+data_dir_var = "XDG_DATA_HOME"
+# Each worker slot gets its own port base here (20000, 20010, ...).
+# Your tests read it to pick ports.
+port_base_var = "GDTEST_PORT_BASE"
+port_base = 20000
+port_stride = 10
+
+[batch]
+# Scripts under these dirs share Godot processes (--mode auto).
+# Only list scripts that are safe to run together in one process.
+dirs = ["tests/unit"]
+max_scripts = 20
+# Cap a batch at this many seconds of previous timings (0 = no cap).
+max_seconds = 5.0
