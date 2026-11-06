@@ -1,6 +1,6 @@
 [package]
 name = "gdtest-runner"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2024"
 rust-version = "1.88"
 description = "A vitest-like parallel runner for Godot 4 + GUT test suites: a dynamic queue, fresh headless Godot workers, a live TUI and a verdict per script"
