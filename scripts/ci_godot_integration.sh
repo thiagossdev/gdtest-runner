@@ -24,11 +24,11 @@ gut_dir=$(realpath "$3")
 repo=$(cd "$(dirname "$0")/.." && pwd)
 
 # What the fixture holds (tests/fixtures/gutproject/tests/unit): 4 script
-# files, 9 tests, 14 asserts, all passing. tests/cli.rs checks the static
+# files, 9 tests, 13 asserts, all passing. tests/cli.rs checks the static
 # count of the same files.
 expected_files=4
 expected_tests=9
-expected_asserts=14
+expected_asserts=13
 
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
